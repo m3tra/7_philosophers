@@ -6,7 +6,7 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 18:36:01 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/04 04:19:37 by fporto           ###   ########.fr       */
+/*   Updated: 2022/04/13 03:17:44 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,23 @@ int	check_alive(t_philo *philo)
 
 int	eat(t_philo *philo)
 {
-	size_t	time_ms;
+	t_prop	*prop;
+	size_t	id;
 
-	if (!flip_forks(philo, 0))
+	prop = philo->prop;
+	id = *philo->id;
+	if (!take_forks(philo))
 		return (0);
-	time_ms = get_runtime_ms(philo->prop);
-	log_event(philo, "fork");
+	if (!check_alive(philo))
+		if (!prop->forks[id] && !(prop->forks[(id + 1) % prop->n_philo]))
+			place_forks(philo);
 	log_event(philo, "eat");
 	usleep(philo->prop->time_eat_ms * 1000);
-	if (philo->prop->n_times_eat > 0)
-		philo->prop->n_times_eat--;
-	if (!flip_forks(philo, 1))
+	if (philo->prop->n_times_eat != -1)
+		philo->meals_eaten++;
+	if (!place_forks(philo))
 		return (0);
+	philo->last_meal_ms = get_runtime_ms(philo->prop);
 	return (1);
 }
 
@@ -58,20 +63,16 @@ void	*life(void *arg)
 
 	philo = arg;
 	philo->last_meal_ms = 0;
+	philo->meals_eaten = 0;
 	i = 0;
 	while (1)
 	{
-		log_event(philo, "think");
-		if (philo->prop->n_philo > 1 && !eat(philo))
-			break ;
-		if (philo->prop->n_times_eat != -1)
-			i++;
-		if (philo->prop->n_times_eat == i)
-			break ;
-		philo->last_meal_ms = get_runtime_ms(philo->prop);
-		if (!philo->prop->n_times_eat)
-			break ;
 		if (!check_alive(philo))
+			break ;
+		log_event(philo, "think");
+		if (philo->prop->n_philo <= 1 || !eat(philo) || !check_alive(philo))
+			break ;
+		if (philo->meals_eaten == philo->prop->n_times_eat || !check_alive(philo))
 			break ;
 		log_event(philo, "sleep");
 		usleep(philo->prop->time_sleep_ms * 1000);

@@ -6,7 +6,7 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 17:24:15 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/07 09:23:32 by fporto           ###   ########.fr       */
+/*   Updated: 2022/04/13 02:59:44 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static int	create_threads(t_prop *prop, pthread_t *th)
 	philos = init_philos(prop);
 	while (i < prop->n_philo)
 	{
-		usleep(10000);
 		if (pthread_create(&th[i], NULL, &life, &philos[i]) != 0)
 			return (0);
 		i++;
@@ -70,7 +69,6 @@ static int	join_threads(t_prop *prop)
 		}
 		else
 		{
-			free(philo->philos);
 			free(philo->id);
 			free(philo);
 		}

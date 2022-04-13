@@ -6,7 +6,7 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 03:59:44 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/12 16:54:37 by fporto           ###   ########.fr       */
+/*   Updated: 2022/04/13 02:26:21 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	*life(void *arg);
 
 int		eat(t_philo *philo);
 int		init_forks(t_prop *prop);
-int		flip_forks(t_philo *philo, int place);
+int		place_forks(t_philo *philo);
+int		take_forks(t_philo *philo);
 
 size_t	get_runtime_ms(t_prop *prop);
 void	free_all(t_prop *prop);
