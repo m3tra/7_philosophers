@@ -6,7 +6,7 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 17:24:15 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/13 02:59:44 by fporto           ###   ########.fr       */
+/*   Updated: 2022/05/23 15:43:20 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static t_philo	*init_philos(t_prop *prop)
 	if (!philos)
 		err_exit("Failed malloc\n", prop);
 	i = 0;
+	prop->philos = philos;
 	while (i < prop->n_philo)
 	{
 		philos[i].id = malloc(sizeof(size_t));
@@ -53,24 +54,21 @@ static int	join_threads(t_prop *prop)
 {
 	t_philo	*philo;
 	size_t	i;
-	int		dead;
+	size_t	dead;
 
 	i = 0;
 	dead = 0;
-	while (i < prop->n_philo && !dead)
+	while (i < prop->n_philo && dead < prop->n_philo)
 	{
-		if (pthread_join(prop->th[i], (void **)&philo) != 0)
-			return (0);
+		if (pthread_join(prop->th[i], (void **)&philo))
+			printf("Error joining thread\n");
 		log_event(philo, "death");
-		if (prop->n_times_eat != -1)
+		dead++;
+		if (prop->n_times_eat == -1)
 		{
-			exterminate(philo->philos);
-			dead++;
-		}
-		else
-		{
-			free(philo->id);
-			free(philo);
+			pthread_mutex_lock(&prop->end_mutex);
+			*prop->suicide = 1;
+			pthread_mutex_unlock(&prop->end_mutex);
 		}
 		i++;
 	}
@@ -85,9 +83,6 @@ static int	overwatch(t_prop *prop)
 	if (!create_threads(prop, prop->th))
 		return (0);
 	usleep(10000);
-	if (!join_threads(prop))
-		return (0);
-	free(prop->th);
 	return (1);
 }
 
@@ -96,16 +91,22 @@ int	main(int argc, char **argv)
 	t_prop	*prop;
 	size_t	i;
 
+	if (argc < 5 || argc > 6)
+		err_exit("Invalid number of arguments", NULL);
 	i = 0;
 	prop = malloc(sizeof(t_prop));
 	if (!prop)
-		return (1);
+		err_exit("Failed malloc", NULL);
+	prop->n_times_eat = -1;
+	if (argc == 6)
+		prop->n_times_eat = ft_atoi(argv[5]);
 	if (!set_args(prop, argc, argv) || !init_mutex(prop) || !init_forks(prop)
 		|| !overwatch(prop))
 	{
 		free_all(prop);
 		return (1);
 	}
+	join_threads(prop);
 	free_all(prop);
 	return (0);
 }

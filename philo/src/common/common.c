@@ -6,18 +6,16 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 18:50:26 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/03 23:42:36 by fporto           ###   ########.fr       */
+/*   Updated: 2022/05/23 14:34:09 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	err_exit(char *err, t_prop *prop)
+void	ft_free(void *ptr)
 {
-	if (prop)
-		free(prop);
-	printf("Error\n%s\n", err);
-	exit(EXIT_FAILURE);
+	if (ptr)
+		free(ptr);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)

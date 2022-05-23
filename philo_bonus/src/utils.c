@@ -6,11 +6,17 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 18:38:33 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/09 19:51:09 by fporto           ###   ########.fr       */
+/*   Updated: 2022/05/23 15:57:30 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
+void	err_exit(char *err, t_prop *prop)
+{
+	printf("Error\n%s\n", err);
+	free_all(prop, 1);
+}
 
 void	free_all(t_prop *prop, int err)
 {
@@ -19,18 +25,15 @@ void	free_all(t_prop *prop, int err)
 	i = (size_t) -1;
 	if (prop)
 	{
-		if (prop->pids)
-			free(prop->pids);
+		ft_free(prop->pids);
 		if (prop->forks != SEM_FAILED)
 			sem_close(prop->forks);
 		if (prop->done != SEM_FAILED)
 			sem_close(prop->done);
 		if (prop->died != SEM_FAILED)
 			sem_close(prop->died);
-		if (prop->rip_thread)
-			free(prop->rip_thread);
-		if (prop->done_thread)
-			free(prop->done_thread);
+		ft_free(prop->rip_thread);
+		ft_free(prop->done_thread);
 		free(prop);
 	}
 	if (err)

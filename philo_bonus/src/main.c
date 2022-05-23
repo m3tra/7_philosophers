@@ -6,7 +6,7 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 17:24:15 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/09 20:10:28 by fporto           ###   ########.fr       */
+/*   Updated: 2022/05/23 15:55:36 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int	main(int argc, char **argv)
 {
 	t_prop	*prop;
 
+	if (argc < 5 || argc > 6)
+		err_exit("Invalid number of arguments", NULL);
 	prop = malloc(sizeof(t_prop));
 	if (!prop)
 		free_all(NULL, 1);

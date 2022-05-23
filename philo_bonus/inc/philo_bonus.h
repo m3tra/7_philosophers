@@ -6,7 +6,7 @@
 /*   By: fporto <fporto@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 03:59:44 by fporto            #+#    #+#             */
-/*   Updated: 2022/04/09 19:49:32 by fporto           ###   ########.fr       */
+/*   Updated: 2022/05/23 15:56:54 by fporto           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,12 @@ typedef struct s_philo
 }	t_philo;
 
 void	free_all(t_prop *prop, int err);
-void	err_exit(t_prop *prop);
+void	err_exit(char *err, t_prop *prop);
 size_t	get_runtime_ms(t_prop *prop);
 void	*ripper(void *arg);
 void	*completionist(void *arg);
 
+void	ft_free(void *ptr);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_isnumber(const char *str);
 int		ft_atoi(const char *str);
